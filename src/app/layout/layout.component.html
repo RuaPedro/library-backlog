@@ -9,8 +9,7 @@
       routerLinkActive
       routerLink="home"
       #homeLink="routerLinkActive"
-      mat-Button
-      [class.active-link]="homeLink.isActive ? 'filled' : 'tonal'"
+      [matButton]="homeLink.isActive ? 'filled' : 'tonal'"
       class="flex-none"
       >My Backlog</a
     >
@@ -18,8 +17,7 @@
       routerLinkActive
       routerLink="explore"
       #exploreLink="routerLinkActive"
-      mat-Button
-      [class.active-link]="exploreLink.isActive ? 'filled' : 'tonal'"
+      [matButton]="exploreLink.isActive ? 'filled' : 'tonal'"
       class="flex-none"
       >Explore</a
     >
@@ -27,8 +25,7 @@
       routerLinkActive
       routerLink="settings"
       #settingsLink="routerLinkActive"
-      mat-Button
-      [class.active-link]="settingsLink.isActive ? 'filled' : 'tonal'"
+      [matButton]="settingsLink.isActive ? 'filled' : 'tonal'"
       class="flex-none"
       >Settings</a
     >

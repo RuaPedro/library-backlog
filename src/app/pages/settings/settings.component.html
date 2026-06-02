@@ -1,0 +1,127 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-2xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-semibold text-gray-900">Settings</h1>
+      <p class="text-sm text-gray-500 mt-1">Manage your account preferences</p>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-4">
+      <div class="flex items-center gap-3 mb-5">
+        <mat-icon class="text-gray-500">person</mat-icon>
+        <h2 class="text-base font-medium text-gray-800">Profile</h2>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium text-gray-600">Display Name</label>
+          <input
+            class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition disabled:bg-gray-100 disabled:text-gray-400"
+            type="text"
+            [(ngModel)]="settings.displayName"
+            (ngModelChange)="onFieldChange('displayName', $event)"
+            placeholder="Pedro Rua"
+            [disabled]="readOnly"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium text-gray-600">Email</label>
+          <input
+            class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition disabled:bg-gray-100 disabled:text-gray-400"
+            type="email"
+            [(ngModel)]="settings.email"
+            (ngModelChange)="onFieldChange('email', $event)"
+            placeholder="pedro_rua@example.com"
+            [disabled]="readOnly"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium text-gray-600">Language</label>
+          <select
+            class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition bg-white disabled:bg-gray-100 disabled:text-gray-400"
+            [(ngModel)]="settings.language"
+            (ngModelChange)="onFieldChange('language', $event)"
+            [disabled]="readOnly"
+          >
+            @for (lang of languages; track lang.value) {
+              <option [value]="lang.value">{{ lang.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferences Section -->
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+      <div class="flex items-center gap-3 mb-5">
+        <mat-icon class="text-gray-500">tune</mat-icon>
+        <h2 class="text-base font-medium text-gray-800">Preferences</h2>
+      </div>
+
+      <div class="flex flex-col divide-y divide-gray-100">
+        <div class="flex items-center justify-between py-3">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Dark Mode</p>
+            <p class="text-xs text-gray-400">Use dark theme across the app</p>
+          </div>
+          <mat-slide-toggle
+            [checked]="settings.darkMode"
+            (change)="onToggleChange('darkMode', $event.checked)"
+            [disabled]="readOnly"
+          />
+        </div>
+
+        <div class="flex items-center justify-between py-3">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Notifications</p>
+            <p class="text-xs text-gray-400">Receive in-app notifications</p>
+          </div>
+          <mat-slide-toggle
+            [checked]="settings.notifications"
+            (change)="onToggleChange('notifications', $event.checked)"
+            [disabled]="readOnly"
+          />
+        </div>
+
+        <div class="flex items-center justify-between py-3">
+          <div>
+            <p class="text-sm font-medium text-gray-800">Public Profile</p>
+            <p class="text-xs text-gray-400">Allow others to view your profile</p>
+          </div>
+          <mat-slide-toggle
+            [checked]="settings.publicProfile"
+            (change)="onToggleChange('publicProfile', $event.checked)"
+            [disabled]="readOnly"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    @if (!readOnly) {
+      <div class="flex justify-end gap-3">
+        <button
+          class="px-5 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          (click)="onSave()"
+          [disabled]="isSaving"
+        >
+          @if (isSaving) {
+            <mat-icon class="animate-spin text-base leading-none">refresh</mat-icon>
+          }
+          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    }
+
+  </div>
+</div>

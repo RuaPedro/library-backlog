@@ -1,0 +1,52 @@
+<div class="bg-state-500 h-screen flex flex-row items-center justify-center">
+  <div class="border-gray-300 bg-white shadow-md rounded-md p-[24px] flex flex-col gap-4">
+    <div class="flex flex-row gap-2 items-center text-blue-700 justify-center">
+      <mat-icon>book_5</mat-icon>
+      <h1 class="p-0 text-xl font-stretch-extra-expanded font-medium">Library Backlog</h1>
+    </div>
+
+    <p class="text-lg">Enter your credentials to access</p>
+
+    <form class="flex flex-col" [formGroup]="form" (ngSubmit)="login()">
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input type="text" formControlName="email" matInput required [disabled]="isLoading" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          [type]="isPasswordShown ? 'text' : 'password'"
+          formControlName="password"
+          autocomplete="off"
+          matInput
+          required
+          (keydown.enter)="login()"
+          [disabled]="isLoading"
+        />
+
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          [disabled]="isLoading"
+          [matTooltip]="isPasswordShown ? 'Hide password' : 'Show password'"
+          (click)="isPasswordShown = !isPasswordShown"
+        >
+          <mat-icon *ngIf="isPasswordShown">visibility</mat-icon>
+          <mat-icon *ngIf="!isPasswordShown">visibility_off</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button type="submit" matButton="filled" [disabled]="isLoading">
+        <div class="flex flex-row gap-3 items-center">
+          <span>Sign In</span>
+          <span
+            *ngIf="isLoading"
+            class="size-5 animate-spin rounded-full border-3 border-white border-t-transparent"
+          ></span>
+        </div>
+      </button>
+    </form>
+  </div>
+</div>

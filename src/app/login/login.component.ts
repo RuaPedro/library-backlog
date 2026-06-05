@@ -12,7 +12,7 @@ import { UserService } from '../services/user/user.service';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+// Pedro Rua
 @Component({
   selector: 'app-login',
   imports: [

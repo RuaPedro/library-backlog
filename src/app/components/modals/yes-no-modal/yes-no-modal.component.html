@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>{{ data }}</h2>
+<mat-dialog-actions>
+  <div class="flex flex-row gap-2 w-full">
+    <button matButton="filled" class="w-1/2" (click)="returnResponse(true)">
+      <mat-icon>check</mat-icon> Yes
+    </button>
+    <button matButton="tonal" class="w-1/2!" (click)="returnResponse(false)">
+      <mat-icon>close</mat-icon> No
+    </button>
+  </div>
+</mat-dialog-actions>

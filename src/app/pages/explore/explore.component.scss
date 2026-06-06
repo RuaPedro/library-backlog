@@ -1,0 +1,9 @@
+@use 'tailwindcss';
+
+.table-header-cell {
+  @apply bg-neutral-200! text-neutral-800! font-medium!;
+}
+
+.table-cell {
+  @apply text-neutral-800! py-2 border-b border-neutral-300!;
+}

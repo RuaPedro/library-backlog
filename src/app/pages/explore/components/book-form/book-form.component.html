@@ -1,0 +1,191 @@
+<h2 mat-dialog-title>{{ mode == 'create' ? 'Create Book' : 'Update Book' }}</h2>
+<mat-dialog-content>
+  <div class="flex flex-col gap-2 py-2">
+    <div class="flex flex-row gap-2">
+      <mat-form-field class="flex-grow">
+        <mat-label>Book Identifier</mat-label>
+        <input
+          matInput
+          type="text"
+          name="txtId"
+          [(ngModel)]="book.key"
+          [disabled]="isLoading"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field class="flex-grow">
+        <mat-label>Title</mat-label>
+        <input
+          matInput
+          type="text"
+          name="txtTitle"
+          [(ngModel)]="book.title"
+          [disabled]="isLoading"
+          required
+        />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field class="w-full">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        type="text"
+        name="txtDescription"
+        [(ngModel)]="book.description"
+        [disabled]="isLoading"
+        placeholder="Leave a full description..."
+        required
+      ></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Large Cover URL</mat-label>
+      <input
+        matInput
+        type="text"
+        name="txtLargeCover"
+        [(ngModel)]="book.cover.urls.large"
+        [disabled]="isLoading"
+        required
+      />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Medium Cover URL</mat-label>
+      <input
+        matInput
+        type="text"
+        name="txtMediumCover"
+        [(ngModel)]="book.cover.urls.medium"
+        [disabled]="isLoading"
+        required
+      />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Small Cover URL</mat-label>
+      <input
+        matInput
+        type="text"
+        name="txtSmallCover"
+        [(ngModel)]="book.cover.urls.small"
+        [disabled]="isLoading"
+        required
+      />
+    </mat-form-field>
+
+    <div class="flex flex-row gap-2">
+      <mat-form-field class="flex-grow">
+        <mat-label>Language</mat-label>
+        <input
+          matInput
+          type="text"
+          name="txtLanguage"
+          [(ngModel)]="book.language"
+          [disabled]="isLoading"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field class="flex-grow">
+        <mat-label>Pages</mat-label>
+        <input
+          matInput
+          type="number"
+          name="txtPages"
+          min="1"
+          [(ngModel)]="book.pages"
+          [disabled]="isLoading"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field class="flex-grow">
+        <mat-label>Year</mat-label>
+        <input
+          matInput
+          type="number"
+          name="txtYear"
+          min="1"
+          [max]="currentDatetime.getFullYear()"
+          [(ngModel)]="book.publish_year"
+          [disabled]="isLoading"
+          required
+        />
+      </mat-form-field>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <h1 class="font-medium text-lg">Authors List</h1>
+
+    <mat-form-field class="w-full">
+      <mat-label>Author name</mat-label>
+      <input #txtAuthorName matInput type="text" [disabled]="isLoading" required />
+
+      <button
+        matIconButton
+        matSuffix
+        (click)="addAuthor(txtAuthorName.value); txtAuthorName.value = ''"
+        [disabled]="!txtAuthorName.value"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div class="flex flex-row flex-wrap gap-1">
+      <mat-chip
+        *ngFor="let author of book.authors; let index = index"
+        (removed)="removeAuthor(index)"
+      >
+        {{ author.name }}
+
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <h1 class="font-medium text-lg">Subjects List</h1>
+
+    <mat-form-field class="w-full">
+      <mat-label>Subject</mat-label>
+      <input #txtSubject matInput type="text" [disabled]="isLoading" required />
+
+      <button
+        matIconButton
+        matSuffix
+        (click)="addSubject(txtSubject.value); txtSubject.value = ''"
+        [disabled]="!txtSubject.value"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div class="flex flex-row flex-wrap gap-1">
+      <mat-chip
+        *ngFor="let subject of book.subjects; let index = index"
+        (removed)="removeSubject(index)"
+      >
+        {{ subject }}
+
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button matButton="filled" (click)="saveBook()" [disabled]="isLoading || invalidBook">
+    <mat-icon>save</mat-icon> Save
+  </button>
+  <button matButton="tonal" [mat-dialog-close] [disabled]="isLoading">
+    <mat-icon>close</mat-icon> Cancel
+  </button>
+</mat-dialog-actions>

@@ -1,6 +1,186 @@
-<p>explore works Pedro Rua!</p>
-<app-search-bar
-    [searchInputPlaceholder]="'Buscar...'"
-    (searchTerm) = "test($event)"
-></app-search-bar>
+<div class="flex justify-center">
+  <div class="w-full max-w-5xl p-6 flex flex-col gap-6">
+    <ng-container>
+      <div class="flex flex-row items-center justify-between">
+        <div class="flex flex-col gap-2">
+          <h1 class="text-xl font-medium">Explore</h1>
+          <p class="text-gray-600">More books are waiting</p>
+        </div>
 
+        <button matButton="filled" (click)="createBook()">New Book</button>
+      </div>
+
+      <div class="flex flex-row gap-2 items-center">
+        <app-search-bar class="grow"></app-search-bar>
+
+        <mat-button-toggle-group hideSingleSelectionIndicator [(ngModel)]="visualizationSelected">
+          <mat-button-toggle value="grid"><mat-icon>grid_view</mat-icon></mat-button-toggle>
+          <mat-button-toggle value="table"><mat-icon>table_chart</mat-icon></mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Animated Panels -->
+      <div class="overflow-hidden">
+        <div
+          class="flex w-[200%] transition-transform duration-500 ease-in-out"
+          [ngClass]="{
+            'translate-x-0': visualizationSelected === 'grid',
+            '-translate-x-1/2': visualizationSelected === 'table',
+          }"
+        >
+          <!-- Grid Panel -->
+          <div class="w-1/2 shrink-0">
+            <mat-paginator
+              #booksCardsPaginator
+              [length]="booksMeta.total"
+              [pageSize]="booksMeta.limit"
+              [pageSizeOptions]="pageOptions"
+              [showFirstLastButtons]="true"
+              [pageIndex]="booksMeta.page"
+              (page)="onPageChange($event)"
+            >
+            </mat-paginator>
+
+            <div class="flex flex-wrap pt-2" *ngIf="visualizationSelected === 'grid'">
+              <div *ngFor="let book of booksData" class="w-1/3 p-2">
+                <app-book-card
+                  [book]="book"
+                  (displayCover)="displayCover($event)"
+                  (updateBook)="updateBook($event)"
+                  (deleteBook)="deleteBook($event)"
+                ></app-book-card>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Panel -->
+          <div class="w-1/2 shrink-0 overflow-x-auto pb-4">
+            <div
+              class="border border-gray-300 rounded-2xl shadow-md overflow-hidden"
+              [ngClass]="{ collapse: visualizationSelected === 'grid' }"
+            >
+              <div class="overflow-x-auto">
+                <table mat-table [dataSource]="booksDataSource" matSort #booksSort="matSort">
+                  <ng-container matColumnDef="cover">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef class="table-header-cell">
+                      COVER
+                    </th>
+                    <td mat-cell class="table-cell" *matCellDef="let book" (click)="displayCover(book)">
+                      <img class="w-[54px] h-full object-cover border border-gray-200" [src]="book.cover.urls.medium">
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="key">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef class="table-header-cell">
+                      ID
+                    </th>
+                    <td mat-cell class="table-cell" *matCellDef="let book">
+                      {{ book.key }}
+                    </td>
+                  </ng-container> 
+
+                  <!-- Title Column -->
+                  <ng-container matColumnDef="title">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef class="table-header-cell">
+                      TITLE
+                    </th>
+                    <td mat-cell class="table-cell" *matCellDef="let book">{{ book.title }}</td>
+                  </ng-container>
+
+                  <!-- Authors Column -->
+                  <ng-container matColumnDef="authors">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef class="table-header-cell">
+                      AUTHORS
+                    </th>
+                    <td mat-cell class="table-cell" *matCellDef="let book">
+                      <ng-container *ngFor="let author of book.authors; let i = index">
+                        {{ i == book.authors.length - 1 ? author.name : author.name + ', ' }}
+                      </ng-container>
+                    </td>
+                  </ng-container>
+
+                  <!-- Pages Column -->
+                  <ng-container matColumnDef="pages">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef class="table-header-cell">
+                      PAGES
+                    </th>
+                    <td mat-cell class="table-cell" *matCellDef="let book">{{ book.pages }}</td>
+                  </ng-container>
+
+                  <!-- Year Column -->
+                  <ng-container matColumnDef="year">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef class="table-header-cell">
+                      YEAR
+                    </th>
+                    <td mat-cell class="table-cell" *matCellDef="let book">
+                      {{ book.publish_year }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Subjects Column -->
+                  <ng-container matColumnDef="subjects">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef class="table-header-cell">
+                      SUBJECTS
+                    </th>
+                    <td mat-cell class="table-cell" *matCellDef="let book">
+                      <div class="flex flex-wrap gap-2">
+                        <app-badge *ngFor="let subject of book.subjects; let i = index">
+                          {{ subject }}
+                        </app-badge>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Actions Column -->
+                  <ng-container matColumnDef="actions">
+                    <th
+                      mat-header-cell
+                      mat-sort-header
+                      *matHeaderCellDef
+                      class="table-header-cell"
+                    ></th>
+                    <td mat-cell class="table-cell" *matCellDef="let book">
+                      <button
+                        type="button"
+                        mat-icon-button
+                        [matMenuTriggerFor]="actionsMenu"
+                        (click)="$event.stopPropagation()"
+                      >
+                        <mat-icon>more_horiz</mat-icon>
+                      </button>
+
+                      <mat-menu #actionsMenu="matMenu">
+                        <button mat-menu-item [disabled]="book.userBook">
+                          Add to your backlog
+                        </button>
+                        <button mat-menu-item (click)="updateBook(book)">Update</button>
+                        <button mat-menu-item class="text-red-700!" (click)="deleteBook(book)">
+                          Delete
+                        </button>
+                      </mat-menu>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let book; columns: displayedColumns"></tr>
+                </table>
+              </div>
+
+              <mat-paginator
+                #booksTablePaginator
+                class="bg-neutral-200!"
+                [length]="booksMeta.total"
+                [pageSize]="booksMeta.limit"
+                [pageSizeOptions]="pageOptions"
+                [showFirstLastButtons]="true"
+                [pageIndex]="booksMeta.page"
+                (page)="onPageChange($event)"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
